@@ -56,20 +56,8 @@
     "vue-tsc": "^3.2.4"
   },
   "peerDependencies": {
-    "@chips/core": "^1.0.0",
-    "@chips/foundation": "^1.0.0",
-    "@chips/sdk": "^1.0.0"
-  },
-  "peerDependenciesMeta": {
-    "@chips/core": {
-      "optional": true
-    },
-    "@chips/sdk": {
-      "optional": true
-    },
-    "@chips/foundation": {
-      "optional": true
-    }
+    "@chips/foundation": "workspace:*",
+    "@chips/sdk": "workspace:*"
   },
   "lint-staged": {
     "*.{ts,vue}": [
