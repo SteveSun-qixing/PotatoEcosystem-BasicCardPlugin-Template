@@ -2,39 +2,43 @@
  * 基础卡片插件主类模板
  *
  * @description 插件入口类，负责管理插件生命周期和创建组件实例
- * @important 使用时请全局替换 "Template" 为你的实际卡片类型名称
+ *
+ * ⚠️ 使用说明：
+ * 1. 全局替换 "Template" 为你的实际卡片类型名称（如 "Video"、"Image"）
+ * 2. 修改 metadata 中的所有信息
+ * 3. 修改 configSchema 定义你的配置结构
+ * 4. 实现服务注册逻辑
  */
 
 import type { BaseCardPlugin, ChipsCore, PluginMetadata } from '@chips/sdk';
 import type { TemplateCardConfig } from './types';
 import { TemplateRenderer } from './renderer';
 import { TemplateEditor } from './editor';
+import { t } from './utils/i18n';
 
 /**
  * 模板卡片插件
- * 
- * ⚠️ 使用说明：
- * 1. 全局替换 "Template" 为你的卡片类型（如 "Video"、"Image"）
- * 2. 修改 metadata 中的信息
- * 3. 修改 configSchema 定义你的配置结构
- * 4. 实现服务注册逻辑
+ *
+ * 实现 BaseCardPlugin 接口（从 @chips/sdk 导入），
+ * 管理插件的完整生命周期。
  */
 export class TemplateCardPlugin implements BaseCardPlugin {
   /**
    * 插件元数据
-   * ⚠️ 必须修改这里的所有值
+   * ⚠️ 必须修改所有值
    */
   readonly metadata: PluginMetadata = {
     id: 'chipshub:template-card',      // ⚠️ 修改为你的插件ID
     name: '模板卡片',                   // ⚠️ 修改为你的卡片名称
     version: '1.0.0',
-    cardType: 'TemplateCard',          // ⚠️ 修改为你的卡片类型
+    chipStandardsVersion: '1.0.0',     // 遵循的薯片协议版本
+    cardType: 'TemplateCard',          // ⚠️ 修改为你的卡片类型（PascalCase）
     icon: 'assets/icon.svg',
     description: '这是一个基础卡片插件模板', // ⚠️ 修改描述
   };
 
   /**
-   * 配置Schema（JSON Schema格式）
+   * 配置 Schema（JSON Schema 格式）
    * ⚠️ 定义你的卡片配置结构
    */
   readonly configSchema = {
@@ -64,48 +68,38 @@ export class TemplateCardPlugin implements BaseCardPlugin {
           },
         },
       },
-      
+
       // ⚠️ 在这里添加你的自定义字段
-      // 示例：
-      // title: {
-      //   type: 'string',
-      //   description: '标题',
-      // },
-      // content: {
-      //   type: 'string',
-      //   description: '内容',
-      // },
     },
   };
 
-  /**
-   * 内核引用
-   */
+  /** 内核引用 */
   private core: ChipsCore | null = null;
 
-  /**
-   * 是否已初始化
-   */
+  /** 是否已初始化 */
   private initialized = false;
 
   /**
    * 初始化插件
    *
-   * @param core - 薯片内核实例
+   * 由插件管理器在启用插件时调用。
+   * 接收 ChipsCore 实例作为与内核通信的唯一通道。
+   *
+   * @param core - 薯片内核实例（通过中心路由架构通信）
    */
   async initialize(core: ChipsCore): Promise<void> {
     if (this.initialized) {
-      console.warn(this.t('plugin.already_initialized'));
+      await this.logInfo('plugin.already_initialized');
       return;
     }
 
     this.core = core;
 
-    // ⚠️ 注册插件服务到内核
+    // 注册插件服务到内核
     await this.registerServices();
 
     this.initialized = true;
-    console.log(this.t('plugin.initialized'));
+    await this.logInfo('plugin.initialized');
   }
 
   /**
@@ -113,26 +107,25 @@ export class TemplateCardPlugin implements BaseCardPlugin {
    */
   async start(): Promise<void> {
     if (!this.initialized) {
-      throw new Error(this.t('plugin.not_initialized'));
+      throw new Error(t('plugin.not_initialized'));
     }
-    console.log(this.t('plugin.started'));
+    await this.logInfo('plugin.started');
   }
 
   /**
    * 停止插件
    */
   async stop(): Promise<void> {
-    console.log(this.t('plugin.stopped'));
+    await this.logInfo('plugin.stopped');
   }
 
   /**
    * 销毁插件
    */
   async destroy(): Promise<void> {
-    // 清理资源
     this.core = null;
     this.initialized = false;
-    console.log(this.t('plugin.destroyed'));
+    await this.logInfo('plugin.destroyed');
   }
 
   /**
@@ -145,6 +138,7 @@ export class TemplateCardPlugin implements BaseCardPlugin {
     if (this.core) {
       renderer.setCore(this.core);
     }
+    this.logInfo('log.renderer_created');
     return renderer;
   }
 
@@ -158,6 +152,7 @@ export class TemplateCardPlugin implements BaseCardPlugin {
     if (this.core) {
       editor.setCore(this.core);
     }
+    this.logInfo('log.editor_created');
     return editor;
   }
 
@@ -176,18 +171,20 @@ export class TemplateCardPlugin implements BaseCardPlugin {
     if (cfg.card_type !== 'TemplateCard') return false; // ⚠️ 修改为你的卡片类型
 
     // ⚠️ 添加你的验证逻辑
-    
+
     return true;
   }
 
   /**
    * 注册服务到内核
+   *
+   * 通过标准的 core.registerService() 方法注册插件提供的服务。
    * ⚠️ 实现你的服务注册逻辑
    */
   private async registerServices(): Promise<void> {
     if (!this.core) return;
 
-    // 示例：注册渲染服务
+    // 注册渲染服务
     await this.core.registerService({
       name: 'template.render', // ⚠️ 修改服务名称
       handler: this.handleRender.bind(this),
@@ -209,6 +206,8 @@ export class TemplateCardPlugin implements BaseCardPlugin {
       },
     });
 
+    await this.logInfo('log.service_registered', { service: 'template.render' });
+
     // ⚠️ 添加更多服务注册
   }
 
@@ -221,10 +220,10 @@ export class TemplateCardPlugin implements BaseCardPlugin {
     options?: unknown;
   }): Promise<{ success: boolean; html?: string; error?: string }> {
     try {
-      // 实现渲染逻辑
       const renderer = this.createRenderer();
-      // ... 渲染逻辑
-      
+      // ⚠️ 实现渲染逻辑
+      void renderer;
+
       return {
         success: true,
         html: '<div>Rendered content</div>',
@@ -238,14 +237,32 @@ export class TemplateCardPlugin implements BaseCardPlugin {
   }
 
   /**
-   * 获取翻译文本
-   * @param key - 翻译key
+   * 记录日志
+   *
+   * 通过内核的日志服务记录，如果日志服务不可用则降级到 console
    */
-  private t(key: string): string {
-    // ⚠️ 实际应该通过 @chips/i18n 获取翻译
-    // import { t } from '@chips/i18n';
-    // return t(`template.${key}`);
-    return `[${key}]`; // 临时占位
+  private async logInfo(key: string, vars?: Record<string, unknown>): Promise<void> {
+    const message = t(key, vars);
+
+    if (!this.core) {
+      console.log(`[TemplateCardPlugin] ${message}`); // ⚠️ 修改前缀
+      return;
+    }
+
+    // 通过内核记录日志
+    await this.core
+      .request({
+        service: 'log',
+        method: 'info',
+        payload: {
+          message,
+          module: 'template-card-plugin', // ⚠️ 修改模块名
+        },
+      })
+      .catch(() => {
+        // 降级：如果日志服务不可用，使用 console
+        console.log(`[TemplateCardPlugin] ${message}`); // ⚠️ 修改前缀
+      });
   }
 }
 

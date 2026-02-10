@@ -3,7 +3,7 @@
  *
  * @packageDocumentation
  * @module TemplateCardPlugin
- * 
+ *
  * ⚠️ 使用说明：
  * 1. 全局替换 "Template" 为你的卡片类型
  * 2. 更新导出的类型和函数
@@ -22,7 +22,7 @@ export { TemplateRenderer } from './renderer';
 // ============================================
 // 导出编辑器
 // ============================================
-export { TemplateEditor } from './editor';
+export { TemplateEditor, UndoManager } from './editor';
 
 // ============================================
 // 导出类型
@@ -31,18 +31,23 @@ export type {
   // 配置类型
   TemplateCardConfig,
   TemplateLayoutConfig,
-  
+
   // 状态类型
   TemplateRendererState,
   TemplateEditorState,
-  
+
   // 命令类型
   TemplateCommand,
-  
+
+  // 事件类型
+  TemplateChangeEvent,
+  EditorEvents,
+  RendererEvents,
+
   // 选项类型
   RenderOptions,
   EditorOptions,
-  
+
   // 验证类型
   ValidationError,
   ValidationResult,
@@ -54,7 +59,18 @@ export type {
 export {
   DEFAULT_CONFIG,
   CSS_PREFIX,
-  ERROR_CODES,
+  CSS_VARS,
+} from './types';
+
+// ============================================
+// 导出错误类型
+// ============================================
+export {
+  TemplateErrorCode,
+  ChipsError,
+  ConfigError,
+  ResourceError,
+  UploadError,
 } from './types';
 
 // ============================================
@@ -64,4 +80,12 @@ export {
   validateConfig,
   getDefaultConfig,
   mergeDefaults,
+  t,
+  hasKey,
+  getAllKeys,
+  generateId,
+  escapeHtml,
+  debounce,
+  throttle,
+  arrayMove,
 } from './utils';

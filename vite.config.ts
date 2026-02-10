@@ -7,44 +7,50 @@ export default defineConfig({
   plugins: [
     vue(),
     dts({
-      include: ['src/**/*.ts', 'src/**/*.vue'],
-      outDir: 'dist',
-      staticImport: true,
       insertTypesEntry: true,
+      include: ['src/**/*.ts', 'src/**/*.vue'],
+      exclude: ['tests/**/*', 'node_modules/**/*'],
     }),
   ],
-  
+
+  resolve: {
+    alias: {
+      '@': resolve(__dirname, 'src'),
+      '@types': resolve(__dirname, 'src/types'),
+      '@utils': resolve(__dirname, 'src/utils'),
+      '@renderer': resolve(__dirname, 'src/renderer'),
+      '@editor': resolve(__dirname, 'src/editor'),
+    },
+  },
+
   build: {
     lib: {
       entry: resolve(__dirname, 'src/index.ts'),
-      name: 'TemplateCardPlugin',
-      formats: ['es'],
+      name: 'TemplateCardPlugin', // ⚠️ 修改为你的插件名
       fileName: 'index',
+      formats: ['es'],
     },
     rollupOptions: {
-      external: ['vue', '@chips/core', '@chips/sdk', '@chips/foundation'],
+      external: [
+        'vue',
+        '@chips/core',
+        '@chips/sdk',
+        '@chips/foundation',
+      ],
       output: {
         globals: {
           vue: 'Vue',
-        },
-        assetFileNames: (assetInfo) => {
-          if (assetInfo.name === 'style.css') {
-            return 'style.css';
-          }
-          return assetInfo.name || '';
+          '@chips/core': 'ChipsCore',
+          '@chips/sdk': 'ChipsSDK',
+          '@chips/foundation': 'ChipsFoundation',
         },
       },
     },
     sourcemap: true,
+    minify: 'terser',
     emptyOutDir: true,
   },
-  
-  resolve: {
-    alias: {
-      '@': resolve(__dirname, 'src'),
-    },
-  },
-  
+
   css: {
     modules: {
       localsConvention: 'camelCase',

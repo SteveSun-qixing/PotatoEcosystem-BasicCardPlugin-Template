@@ -4,10 +4,15 @@ import { resolve } from 'path';
 
 export default defineConfig({
   plugins: [vue()],
-  
+
   test: {
+    globals: true,
     environment: 'jsdom',
+    include: ['tests/**/*.test.ts', 'tests/**/*.spec.ts'],
+    exclude: ['node_modules', 'dist'],
     setupFiles: ['./tests/setup.ts'],
+    mockReset: true,
+    restoreMocks: true,
     coverage: {
       provider: 'v8',
       reporter: ['text', 'json', 'html'],
@@ -16,18 +21,27 @@ export default defineConfig({
         'tests/',
         '**/*.d.ts',
         '**/*.config.*',
-        '**/mockData',
         'dist/',
+        'src/index.ts',
+        'src/types/index.ts',
+        'src/utils/index.ts',
       ],
+      thresholds: {
+        lines: 80,
+        functions: 55,
+        branches: 80,
+        statements: 80,
+      },
     },
-    globals: true,
-    mockReset: true,
-    restoreMocks: true,
   },
-  
+
   resolve: {
     alias: {
       '@': resolve(__dirname, 'src'),
+      '@types': resolve(__dirname, 'src/types'),
+      '@utils': resolve(__dirname, 'src/utils'),
+      '@renderer': resolve(__dirname, 'src/renderer'),
+      '@editor': resolve(__dirname, 'src/editor'),
     },
   },
 });

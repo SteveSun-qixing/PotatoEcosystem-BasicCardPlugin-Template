@@ -1,8 +1,12 @@
 # 开发阶段词汇表
-# ⚠️ 这个文件用于开发时使用人类可读的key
-# 构建时会自动替换为系统词汇编码
+#
+# ⚠️ 使用说明：
+# 1. 开发时使用词汇 key（如 'editor.upload'）
+# 2. 构建时自动替换为系统编码（如 'i18n.plugin.400001'）
+# 3. 运行时系统根据当前语言返回翻译文本
+# 4. 修改词汇内容以匹配你的卡片类型
 
-# 插件相关
+# 插件生命周期
 plugin:
   initialized: "插件已初始化"
   already_initialized: "插件已经初始化"
@@ -11,21 +15,22 @@ plugin:
   stopped: "插件已停止"
   destroyed: "插件已销毁"
 
-# 渲染器相关
+# 渲染器
 renderer:
   loading: "正在加载..."
   render_success: "渲染成功"
   render_failed: "渲染失败"
 
-# 编辑器相关
+# 编辑器
 editor:
   placeholder: "请输入内容..."
   save_success: "保存成功"
   save_failed: "保存失败"
+
+# 工具栏
+toolbar:
   undo: "撤销"
   redo: "重做"
-  cannot_undo: "无法撤销"
-  cannot_redo: "无法重做"
 
 # 错误消息
 error:
@@ -34,15 +39,8 @@ error:
   load_failed: "加载失败"
   resource_not_found: "资源未找到"
   render_failed: "渲染失败: {reason}"
-  edit_failed: "编辑失败: {reason}"
-  unknown: "未知错误"
-
-# 提示消息
-hint:
-  click_to_edit: "点击编辑"
-  double_click_to_select: "双击选择"
-  drag_to_move: "拖动移动"
-  save_shortcut: "Ctrl/Cmd+S 保存"
+  upload_failed: "上传失败"
+  editor_not_initialized: "编辑器未初始化"
 
 # 确认对话框
 confirm:
@@ -64,8 +62,21 @@ button:
 # 状态文本
 status:
   ready: "就绪"
-  loading: "加载中"
-  saving: "保存中"
+  loading: "加载中..."
+  saving: "保存中..."
   success: "成功"
   failed: "失败"
-  warning: "警告"
+
+# 日志
+log:
+  renderer_created: "渲染器已创建"
+  editor_created: "编辑器已创建"
+  service_registered: "服务已注册: {service}"
+
+# 通用
+common:
+  ok: "确定"
+  cancel: "取消"
+  save: "保存"
+  delete: "删除"
+  close: "关闭"
