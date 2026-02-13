@@ -60,6 +60,8 @@ const DEV_VOCABULARY: Record<string, string> = {
   'error.upload_failed': '上传失败',
   'error.editor_not_initialized': '编辑器未初始化',
   'error.validation_failed': '验证失败',
+  'error.log_failed': '日志记录失败',
+  'error.service_register_failed': '服务注册失败',
 
   // 确认对话框
   'confirm.delete': '确定要删除吗？',

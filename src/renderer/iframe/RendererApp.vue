@@ -97,9 +97,9 @@ onUnmounted(() => {
 // 监听配置变化
 watch(
   () => props.config,
-  (newConfig) => {
+  (_newConfig) => {
     // ⚠️ 配置变化时的处理逻辑
-    console.log('Config updated:', newConfig);
+    // 在这里添加配置变化后的更新逻辑
   },
   { deep: true }
 );

@@ -93,13 +93,18 @@ export class TemplateCardPlugin implements BaseCardPlugin {
       return;
     }
 
-    this.core = core;
+    try {
+      this.core = core;
 
-    // 注册插件服务到内核
-    await this.registerServices();
+      // 注册插件服务到内核
+      await this.registerServices();
 
-    this.initialized = true;
-    await this.logInfo('plugin.initialized');
+      this.initialized = true;
+      await this.logInfo('plugin.initialized');
+    } catch (error) {
+      this.core = null;
+      throw error;
+    }
   }
 
   /**
@@ -109,23 +114,39 @@ export class TemplateCardPlugin implements BaseCardPlugin {
     if (!this.initialized) {
       throw new Error(t('plugin.not_initialized'));
     }
-    await this.logInfo('plugin.started');
+    try {
+      await this.logInfo('plugin.started');
+    } catch (error) {
+      // 日志失败不应阻止启动
+      console.error('[TemplateCardPlugin]', t('error.log_failed'), error);
+    }
   }
 
   /**
    * 停止插件
    */
   async stop(): Promise<void> {
-    await this.logInfo('plugin.stopped');
+    try {
+      await this.logInfo('plugin.stopped');
+    } catch (error) {
+      // 日志失败不应阻止停止
+      console.error('[TemplateCardPlugin]', t('error.log_failed'), error);
+    }
   }
 
   /**
    * 销毁插件
    */
   async destroy(): Promise<void> {
-    this.core = null;
-    this.initialized = false;
-    await this.logInfo('plugin.destroyed');
+    try {
+      await this.logInfo('plugin.destroyed');
+    } catch (error) {
+      // 日志失败不应阻止销毁
+      console.error('[TemplateCardPlugin]', t('error.log_failed'), error);
+    } finally {
+      this.core = null;
+      this.initialized = false;
+    }
   }
 
   /**
@@ -184,34 +205,39 @@ export class TemplateCardPlugin implements BaseCardPlugin {
   private async registerServices(): Promise<void> {
     if (!this.core) return;
 
-    // 注册渲染服务
-    await this.core.registerService({
-      name: 'template.render', // ⚠️ 修改服务名称
-      handler: (payload: unknown) => this.handleRender(payload as {
-        config: TemplateCardConfig;
-        options?: unknown;
-      }),
-      schema: {
-        input: {
-          type: 'object',
-          properties: {
-            config: { type: 'object' },
-            options: { type: 'object' },
+    try {
+      // 注册渲染服务
+      await this.core.registerService({
+        name: 'template.render', // ⚠️ 修改服务名称
+        handler: (payload: unknown) => this.handleRender(payload as {
+          config: TemplateCardConfig;
+          options?: unknown;
+        }),
+        schema: {
+          input: {
+            type: 'object',
+            properties: {
+              config: { type: 'object' },
+              options: { type: 'object' },
+            },
+          },
+          output: {
+            type: 'object',
+            properties: {
+              success: { type: 'boolean' },
+              html: { type: 'string' },
+            },
           },
         },
-        output: {
-          type: 'object',
-          properties: {
-            success: { type: 'boolean' },
-            html: { type: 'string' },
-          },
-        },
-      },
-    });
+      });
 
-    await this.logInfo('log.service_registered', { service: 'template.render' });
+      await this.logInfo('log.service_registered', { service: 'template.render' });
 
-    // ⚠️ 添加更多服务注册
+      // ⚠️ 添加更多服务注册
+    } catch (error) {
+      console.error('[TemplateCardPlugin]', t('error.service_register_failed'), error);
+      throw error;
+    }
   }
 
   /**
