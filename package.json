@@ -1,7 +1,7 @@
 {
   "name": "@chips/template-card-plugin",
   "version": "1.0.0",
-  "description": "基础卡片插件模板 - 薯片生态",
+  "description": "基础卡片插件模板 - 薯片生态（iframe 运行模式）",
   "author": "Chips Team",
   "license": "MIT",
   "type": "module",
@@ -13,7 +13,11 @@
       "import": "./dist/index.js",
       "types": "./dist/index.d.ts"
     },
-    "./style.css": "./dist/style.css"
+    "./style.css": "./dist/style.css",
+    "./bridge": {
+      "import": "./dist/bridge/index.js",
+      "types": "./dist/bridge/index.d.ts"
+    }
   },
   "files": [
     "dist",
@@ -23,7 +27,12 @@
   ],
   "scripts": {
     "dev": "vite",
-    "build": "vue-tsc --noEmit && vite build",
+    "dev:renderer": "BUILD_MODE=renderer vite",
+    "dev:editor": "BUILD_MODE=editor vite",
+    "build": "pnpm build:lib && pnpm build:renderer && pnpm build:editor",
+    "build:lib": "vue-tsc --noEmit && BUILD_MODE=lib vite build",
+    "build:renderer": "BUILD_MODE=renderer vite build",
+    "build:editor": "BUILD_MODE=editor vite build",
     "preview": "vite preview",
     "test": "vitest",
     "test:coverage": "vitest --coverage",
@@ -60,7 +69,8 @@
     "chips",
     "card",
     "plugin",
-    "template"
+    "template",
+    "iframe"
   ],
   "repository": {
     "type": "git",

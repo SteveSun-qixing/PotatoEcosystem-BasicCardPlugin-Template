@@ -5,7 +5,7 @@
  * ⚠️ 实现你的编辑组件逻辑
  */
 
-import type { BaseCardPlugin, ChipsCore } from '@chips/sdk';
+import type { BaseCardPlugin as _BaseCardPlugin, ChipsCore } from '@chips/sdk';
 import type {
   TemplateCardConfig,
   EditorOptions,
@@ -36,7 +36,7 @@ export class TemplateEditor {
   private container: HTMLElement | null = null;
 
   /** 编辑器选项 */
-  private options: EditorOptions | null = null;
+  private _options: EditorOptions | null = null;
 
   /** 撤销/重做管理器 ⚠️ 根据需要修改泛型类型 */
   private history = new UndoManager<TemplateCardConfig>(50);
@@ -72,7 +72,7 @@ export class TemplateEditor {
   ): Promise<void> {
     this.config = { ...config };
     this.container = container;
-    this.options = options;
+    this._options = options;
 
     // 记录初始状态到历史
     this.history.push({ ...config });
@@ -95,7 +95,7 @@ export class TemplateEditor {
       // app.mount(container);
 
       // 工具栏（如果需要）
-      if (options.toolbar) {
+      if (this._options?.toolbar) {
         const toolbar = this.createToolbar();
         container.appendChild(toolbar);
       }
@@ -250,7 +250,7 @@ export class TemplateEditor {
     this.unbindKeyboardShortcuts();
     this.config = null;
     this.container = null;
-    this.options = null;
+    this._options = null;
     this.changeCallback = null;
     this.history.clear();
   }

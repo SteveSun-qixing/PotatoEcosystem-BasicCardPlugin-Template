@@ -1,123 +1,59 @@
 # Basic Card Plugin Manifest Template
 # 基础卡片插件清单模板
+# 遵循《插件系统技术规格》manifest.yaml 规范
+
+# === 规范版本 ===
+schemaVersion: "1.0.0"
 
 # === 基础信息 ===
-id: "chipshub:template-card"           # ⚠️ 必须修改：格式 "发行商:插件名"
-name: "card_type.template.name"        # ⚠️ 必须修改：插件显示名称（多语言 key）
-version: "1.0.0"                       # 版本号，遵循语义化版本
-description: "card_type.template.desc" # ⚠️ 必须修改：插件描述（多语言 key）
-author: "Chips Team"                   # ⚠️ 修改为你的名字或团队
-publisher: "chipshub"                  # ⚠️ 修改为你的发行商ID
-license: "MIT"                         # 许可证类型
-homepage: "https://github.com/chipscard/template-plugin"      # ⚠️ 修改
-repository: "https://github.com/chipscard/template-plugin"    # ⚠️ 修改
-
-# === 插件类型 ===
-type: "base_card"                      # 固定值：基础卡片插件
-cardType: "TemplateCard"               # ⚠️ 必须修改：卡片类型名称，必须是 PascalCase
-
-# === 图标和截图 ===
-icon: "assets/icon.svg"                # 插件图标路径
-screenshots:                           # ⚠️ 添加你的截图
-  - "assets/screenshots/render.png"
-  - "assets/screenshots/editor.png"
-
-# === 标签和分类 ===
-tags:                                  # ⚠️ 添加相关标签
-  - "template"
-  - "example"
-  - "basic-card"
-category: "通用类"                      # ⚠️ 修改分类：文本类/媒体类/交互类/专业类/内容类/信息类
+id: "chipshub.template-card"              # ⚠️ 必须修改：格式 "publisher.plugin-name"
+name: "i18n.plugin.template_card.name"    # ⚠️ 必须修改：插件显示名称（多语言 key）
+version: "1.0.0"                          # 版本号，遵循语义化版本
+type: "card"                              # 固定值：卡片插件
+publisher: "chipshub"                     # ⚠️ 修改为你的发行商ID
+description: "i18n.plugin.template_card.desc"  # ⚠️ 必须修改：插件描述（多语言 key）
+icon: "assets/icon.png"                   # 插件图标路径（相对包根）
 
 # === 入口文件 ===
-main: "dist/index.js"                  # 主入口文件
-style: "dist/style.css"               # 样式文件
+# 卡片插件必须提供 renderer 和 editor 两个入口
+entry:
+  renderer: "renderer/index.html"         # 渲染器 iframe 入口
+  editor: "editor/index.html"             # 编辑器 iframe 入口
 
-# === 支持的协议版本 ===
-protocol_version:
-  min: "1.0.0"                         # 支持的最低协议版本
-  max: "1.5.0"                         # 支持的最高协议版本
+# === 权限声明 ===
+permissions:
+  - "card.read"                           # 读取卡片
+  - "card.write"                          # 写入卡片
+  - "resource.fetch"                      # 获取资源
+
+# === 能力声明 ===
+capabilities:
+  cardType: "TemplateCard"                # ⚠️ 必须修改：卡片类型名称，必须是 PascalCase
+
+# === 兼容性 ===
+compatibility:
+  host: ">=1.0.0"                         # 要求的主机版本范围
+  sdk: ">=1.0.0"                          # 要求的 SDK 版本范围
+  platform:                               # 支持的平台
+    - "win32"
+    - "darwin"
+    - "linux"
 
 # === 依赖声明 ===
 dependencies:
-  plugins: []                          # 依赖的其他插件
-  libraries:                           # 外部库依赖
-    vue: "^3.4.0"
-    typescript: "^5.0.0"
+  plugins: []                             # 依赖的其他插件
 
-# === 权限需求 ===
-permissions:                           # 插件需要的权限
-  - "card.read"                        # 读取卡片
-  - "card.write"                       # 写入卡片
-  - "resource.read"                    # 读取资源
-  - "resource.write"                   # 写入资源
-
-# === 配置 Schema ===
-# ⚠️ 定义你的卡片配置结构，与 src/types/config.ts 中的接口对应
-config_schema:
-  type: object
-  required:
-    - card_type                        # 卡片类型字段必需
-    # ⚠️ 添加你的必需字段
-  properties:
-    # 通用字段（所有卡片都需要）
-    card_type:
-      const: "TemplateCard"            # ⚠️ 修改为你的卡片类型
-    theme:
-      type: string
-      default: ""
-      description: "主题包标识"
-    layout:
-      type: object
-      properties:
-        height_mode:
-          type: string
-          enum: ["auto", "fixed"]
-          default: "auto"
-        fixed_height:
-          type: integer
-          description: "固定高度（像素）"
-
-    # ⚠️ 在这里添加你的自定义字段
-
-# === 多语言支持 ===
-i18n:
-  default_locale: "zh-CN"              # 默认语言
-  supported_locales:                   # 支持的语言列表
+# === 多语言配置 ===
+locales:
+  default: "zh-CN"                        # 默认语言
+  supported:                              # 支持的语言列表
     - "zh-CN"
     - "zh-TW"
     - "en-US"
     - "ja-JP"
     - "ko-KR"
-  vocabulary_file: "assets/i18n/dev_vocabulary.yaml"  # 开发阶段词汇表文件
+  path: "locales"                         # 语言文件目录
 
-# === 兼容性 ===
-compatibility:
-  platforms:                           # 支持的平台
-    - "win32"
-    - "darwin"
-    - "linux"
-    - "web"
-  min_core_version: "1.0.0"           # 要求的最低内核版本
-
-# === 提供的服务 ===
-services:                              # ⚠️ 定义你的插件服务
-  - name: "template.render"            # ⚠️ 修改服务名称
-    description: "渲染模板卡片"
-    input_schema:
-      type: object
-      properties:
-        config:
-          type: object
-          description: "卡片配置"
-        options:
-          type: object
-          description: "渲染选项"
-    output_schema:
-      type: object
-      properties:
-        success:
-          type: boolean
-        html:
-          type: string
-          description: "渲染后的HTML"
+# === 配置 Schema ===
+# ⚠️ 定义你的卡片配置结构，与 src/types/config.ts 中的接口对应
+# 此 Schema 用于验证卡片配置文件

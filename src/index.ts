@@ -89,3 +89,40 @@ export {
   throttle,
   arrayMove,
 } from './utils';
+
+// ============================================
+// 导出 Bridge 模块（iframe 通信）
+// ============================================
+export {
+  // 消息类型常量
+  PROTOCOL_NAME,
+  PROTOCOL_VERSION,
+  IframeBridgeErrorCode,
+  // Bridge 类和工具函数
+  IframeBridge,
+  IframeBridgeError,
+  getBridge,
+  initBridge,
+  stopBridge,
+} from './bridge';
+
+// 导出 Bridge 相关类型
+export type {
+  CardMessageType,
+  CardRuntimeMessage,
+  InitPayload,
+  BridgeRequestPayload,
+  BridgeResponsePayload,
+  ResourceRequestPayload,
+  ResourceResponsePayload,
+  ResizePayload,
+  ErrorPayload,
+  ThemeUpdatePayload,
+  ConfigChangePayload,
+  ReadyPayload,
+  DisposePayload,
+  HostToIframeMessage,
+  IframeToHostMessage,
+  AnyCardMessage,
+  IframeBridgeErrorCodeType,
+} from './bridge';

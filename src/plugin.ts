@@ -187,7 +187,10 @@ export class TemplateCardPlugin implements BaseCardPlugin {
     // 注册渲染服务
     await this.core.registerService({
       name: 'template.render', // ⚠️ 修改服务名称
-      handler: this.handleRender.bind(this),
+      handler: (payload: unknown) => this.handleRender(payload as {
+        config: TemplateCardConfig;
+        options?: unknown;
+      }),
       schema: {
         input: {
           type: 'object',
@@ -215,7 +218,7 @@ export class TemplateCardPlugin implements BaseCardPlugin {
    * 处理渲染服务请求
    * ⚠️ 实现你的服务处理器
    */
-  private async handleRender(payload: {
+  private async handleRender(_payload: {
     config: TemplateCardConfig;
     options?: unknown;
   }): Promise<{ success: boolean; html?: string; error?: string }> {

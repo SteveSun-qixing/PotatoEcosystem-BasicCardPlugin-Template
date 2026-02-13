@@ -32,11 +32,20 @@ const DEV_VOCABULARY: Record<string, string> = {
   'renderer.loading': '正在加载...',
   'renderer.render_success': '渲染成功',
   'renderer.render_failed': '渲染失败',
+  'renderer.placeholder': '卡片内容占位符',
 
   // 编辑器
   'editor.placeholder': '请输入内容...',
   'editor.save_success': '保存成功',
   'editor.save_failed': '保存失败',
+  'editor.loading': '编辑器加载中...',
+  'editor.undo': '撤销',
+  'editor.redo': '重做',
+  'editor.save': '保存',
+  'editor.height_mode': '高度模式',
+  'editor.height_auto': '自适应',
+  'editor.height_fixed': '固定高度',
+  'editor.fixed_height': '固定高度值',
 
   // 工具栏
   'toolbar.undo': '撤销',
@@ -49,6 +58,8 @@ const DEV_VOCABULARY: Record<string, string> = {
   'error.resource_not_found': '资源未找到',
   'error.render_failed': '渲染失败: {reason}',
   'error.upload_failed': '上传失败',
+  'error.editor_not_initialized': '编辑器未初始化',
+  'error.validation_failed': '验证失败',
 
   // 确认对话框
   'confirm.delete': '确定要删除吗？',
@@ -70,6 +81,7 @@ const DEV_VOCABULARY: Record<string, string> = {
   'common.save': '保存',
   'common.delete': '删除',
   'common.close': '关闭',
+  'common.dismiss': '关闭',
 };
 
 /**
